@@ -4,6 +4,7 @@ import { BASE_PROMPT, getSystemPrompt } from './prompts';
 import { basePrompt as nodeBasePrompt } from './defaults/node';
 import { basePrompt as reactBasePrompt } from './defaults/react';
 import Groq from 'groq-sdk';
+import cors from "cors";
 
 config();
 
@@ -12,7 +13,9 @@ const groq = new Groq({
 });
 
 const app = express();
+app.use(cors());
 app.use(express.json());
+
 app.post('/template', async (req, res) => {
   const prompt = req.body.prompt;
 
@@ -67,6 +70,7 @@ app.post('/chat', async (req, res) => {
       ],
       max_tokens: 8000,
     });
+    console.log(response);
 
     res.json({
       response: response.choices[0].message.content,
